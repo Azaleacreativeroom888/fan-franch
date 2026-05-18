@@ -8,469 +8,154 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bleu-nuit: #0a1628;
-      --bleu-roi: #1a3a6b;
-      --bleu-marine: #2453a0;
-      --bleu-ciel: #4a7fd4;
-      --bleu-pale: #c8d8f0;
-      --rouge-french: #c41e3a;
-      --rouge-accent: #e63950;
-      --or: #c9a84c;
-      --blanc: #fafaf8;
-      --creme: #f4f0e8;
-      --gris: #8a8a8a;
+      --bleu-nuit:#0a1628; --bleu-roi:#1a3a6b; --bleu-marine:#2453a0;
+      --bleu-ciel:#4a7fd4; --bleu-pale:#c8d8f0; --rouge-french:#c41e3a;
+      --rouge-light:#fce8eb; --or:#c9a84c; --or-light:#fdf5e0;
+      --blanc:#fafaf8; --creme:#f4f0e8; --gris:#8a8a8a;
     }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Cormorant Garamond',serif;background:var(--creme);color:var(--bleu-nuit);overflow-x:hidden;}
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* ── NAV ── */
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:0 2rem;height:64px;background:rgba(10,22,40,0.97);backdrop-filter:blur(10px);border-bottom:1px solid rgba(201,168,76,0.3);}
+    .nav-logo{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:var(--blanc);text-decoration:none;}
+    .nav-logo span{color:var(--rouge-french);}
+    .nav-links{display:flex;gap:1.8rem;list-style:none;}
+    .nav-links a{font-family:'Montserrat',sans-serif;font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--bleu-pale);text-decoration:none;transition:color 0.3s;position:relative;}
+    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--rouge-french);transform:scaleX(0);transition:transform 0.3s;}
+    .nav-links a:hover{color:var(--blanc);}
+    .nav-links a:hover::after{transform:scaleX(1);}
+    .nav-links a.active{color:var(--or);}
 
-    body {
-      font-family: 'Cormorant Garamond', serif;
-      background: var(--blanc);
-      color: var(--bleu-nuit);
+    /* ── HAMBURGER ── */
+    .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;}
+    .hamburger span{display:block;width:24px;height:2px;background:var(--blanc);transition:all 0.3s;border-radius:1px;}
+    .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .hamburger.open span:nth-child(2){opacity:0;}
+    .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+    .mobile-menu{position:fixed;top:64px;left:0;right:0;bottom:0;z-index:190;background:var(--bleu-nuit);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2.5rem;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.77,0,0.175,1);}
+    .mobile-menu.open{transform:translateX(0);}
+    .mobile-menu a{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--blanc);text-decoration:none;}
+    .mobile-menu a.active,.mobile-menu a:hover{color:var(--rouge-french);}
+    .mob-line{width:40px;height:1px;background:rgba(201,168,76,0.3);}
+
+    /* ── PAGE HEADER ── */
+    .page-header{background:var(--bleu-nuit);padding:8rem 2rem 4rem;position:relative;overflow:hidden;}
+    .page-header::after{content:'TRADUCTIONS';position:absolute;right:-1rem;bottom:-2rem;font-family:'Playfair Display',serif;font-size:clamp(4rem,12vw,10rem);font-weight:900;color:rgba(255,255,255,0.03);white-space:nowrap;pointer-events:none;}
+    .ph-kicker{font-family:'Montserrat',sans-serif;font-size:0.65rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--rouge-french);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+    .ph-kicker::before{content:'';width:30px;height:1px;background:var(--rouge-french);}
+    .page-header h1{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,8vw,5rem);font-weight:900;color:var(--blanc);line-height:1;}
+    .page-header h1 em{font-style:italic;color:var(--bleu-ciel);}
+    .page-header-desc{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:var(--bleu-pale);margin-top:1.2rem;max-width:580px;}
+
+    /* ── FILTER BAR ── */
+    .filter-bar{background:var(--blanc);border-bottom:2px solid var(--bleu-pale);padding:1.2rem 2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;position:sticky;top:64px;z-index:100;}
+    .filter-label{font-family:'Montserrat',sans-serif;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gris);flex-shrink:0;}
+    .filter-tabs{display:flex;gap:0.5rem;flex-wrap:wrap;}
+    .filter-tab{font-family:'Montserrat',sans-serif;font-size:0.55rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:0.45rem 1.1rem;border:2px solid var(--bleu-pale);background:transparent;color:var(--gris);cursor:pointer;border-radius:2px;transition:all 0.2s;}
+    .filter-tab:hover{border-color:var(--bleu-marine);color:var(--bleu-marine);}
+    .filter-tab.active{background:var(--bleu-marine);border-color:var(--bleu-marine);color:var(--blanc);}
+    .filter-tab.active-red{background:var(--rouge-french);border-color:var(--rouge-french);color:var(--blanc);}
+
+    /* ── MAIN CONTAINER ── */
+    .main-wrap{display:grid;grid-template-columns:1fr 300px;gap:0;align-items:start;}
+
+    /* ── ENTRIES ── */
+    .entries-col{padding:3rem 2rem;}
+    .year-group{margin-bottom:3.5rem;}
+    .year-heading{font-family:'Playfair Display',serif;font-size:clamp(2rem,6vw,3.5rem);font-weight:900;font-style:italic;color:var(--bleu-pale);margin-bottom:2rem;display:flex;align-items:baseline;gap:1rem;border-bottom:2px solid var(--bleu-pale);padding-bottom:0.8rem;}
+    .year-count{font-family:'Montserrat',sans-serif;font-size:0.65rem;font-weight:400;letter-spacing:0.2em;color:var(--gris);}
+    .entries-list{display:flex;flex-direction:column;gap:1.5rem;}
+
+    /* ── ENTRY CARD ── */
+    .entry-card{background:var(--blanc);border:2px solid var(--bleu-pale);border-radius:0;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s;box-shadow:4px 4px 0 var(--bleu-pale);}
+    .entry-card:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--bleu-pale);}
+
+    /* カードヘッダー */
+    .entry-header{background:var(--bleu-nuit);border-bottom:2px solid var(--bleu-marine);padding:1rem 1.4rem;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;}
+    .entry-header-left{flex:1;}
+    .entry-series{font-family:'Montserrat',sans-serif;font-size:0.5rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--bleu-ciel);margin-bottom:0.3rem;}
+    .entry-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--blanc);line-height:1.2;}
+    .entry-tag{font-family:'Montserrat',sans-serif;font-size:0.5rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:0.3rem 0.7rem;flex-shrink:0;align-self:flex-start;white-space:nowrap;}
+    .tag-trans{background:var(--rouge-french);color:var(--blanc);}
+    .tag-knowledge{background:var(--or);color:var(--bleu-nuit);}
+    .tag-note{background:var(--bleu-marine);color:var(--blanc);}
+
+    /* セクション */
+    .entry-body{padding:0;}
+    .entry-section{padding:1.1rem 1.4rem;border-bottom:1px dashed rgba(10,22,40,0.12);}
+    .entry-section:last-child{border-bottom:none;}
+    .entry-section-label{font-family:'Montserrat',sans-serif;font-size:0.5rem;letter-spacing:0.25em;text-transform:uppercase;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.5rem;}
+    .label-original{color:var(--bleu-marine);}
+    .label-trans{color:var(--rouge-french);}
+    .label-note{color:var(--or);}
+    .entry-section p{font-family:'Cormorant Garamond',serif;font-size:1rem;line-height:1.75;color:#333;}
+    .entry-section .original-text{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:var(--bleu-marine);line-height:1.7;}
+    .entry-section .trans-text{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--bleu-nuit);line-height:1.7;}
+    .entry-section .trans-v2{font-family:'Cormorant Garamond',serif;font-size:1rem;color:#555;line-height:1.7;margin-top:0.6rem;padding-top:0.6rem;border-top:1px solid var(--bleu-pale);}
+    .trans-arrow{display:inline-block;color:var(--rouge-french);font-size:1rem;margin:0.5rem 0;font-weight:700;}
+    .entry-section.note-section{background:var(--or-light);}
+    .entry-section.note-section .entry-section-label{color:var(--or);}
+    .entry-section.note-section p{font-size:0.95rem;color:#5a3e00;}
+    .highlight{color:var(--rouge-french);font-weight:700;}
+    .entry-footer{padding:0.7rem 1.4rem;background:var(--creme);border-top:1px solid var(--bleu-pale);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;}
+    .entry-date{font-family:'Montserrat',sans-serif;font-size:0.5rem;color:var(--gris);}
+    .entry-chap{font-family:'Montserrat',sans-serif;font-size:0.5rem;color:var(--bleu-marine);}
+
+    /* ── SIDEBAR ── */
+    .sidebar{background:var(--blanc);border-left:1px solid var(--bleu-pale);padding:3rem 1.5rem;position:sticky;top:calc(64px + 56px);max-height:calc(100vh - 120px);overflow-y:auto;}
+    .sb-widget{margin-bottom:2.5rem;}
+    .sb-title{font-family:'Montserrat',sans-serif;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--rouge-french);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.8rem;}
+    .sb-title::before{content:'';width:20px;height:1px;background:var(--rouge-french);}
+    .prog-item{margin-bottom:1.3rem;}
+    .prog-info{display:flex;justify-content:space-between;margin-bottom:0.35rem;}
+    .prog-series{font-family:'Cormorant Garamond',serif;font-size:0.9rem;font-weight:600;color:var(--bleu-nuit);}
+    .prog-pct{font-family:'Montserrat',sans-serif;font-size:0.6rem;color:var(--bleu-marine);}
+    .prog-bar{height:3px;background:var(--bleu-pale);}
+    .prog-fill{height:100%;background:linear-gradient(to right,var(--bleu-marine),var(--bleu-ciel));}
+    .sb-stat{display:flex;justify-content:space-between;align-items:center;padding:0.7rem 0;border-bottom:1px solid var(--bleu-pale);}
+    .sb-stat-lbl{font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:var(--gris);}
+    .sb-stat-val{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--bleu-nuit);}
+    .tag-cloud{display:flex;flex-wrap:wrap;gap:0.4rem;}
+    .tag-pill{font-family:'Montserrat',sans-serif;font-size:0.5rem;letter-spacing:0.08em;padding:0.35rem 0.7rem;border:1px solid var(--bleu-pale);color:var(--bleu-marine);cursor:pointer;transition:all 0.2s;}
+    .tag-pill:hover{background:var(--bleu-marine);border-color:var(--bleu-marine);color:var(--blanc);}
+
+    /* 投稿促進バナー */
+    .submit-banner{background:var(--rouge-french);padding:1.5rem;margin-top:2rem;}
+    .submit-banner h4{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--blanc);margin-bottom:0.5rem;}
+    .submit-banner p{font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:rgba(255,255,255,0.85);line-height:1.6;margin-bottom:1rem;}
+    .submit-banner a{font-family:'Montserrat',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--bleu-nuit);background:var(--or);padding:0.6rem 1.2rem;text-decoration:none;display:inline-block;transition:opacity 0.2s;}
+    .submit-banner a:hover{opacity:0.85;}
+
+    /* ── FOOTER ── */
+    footer{background:var(--bleu-nuit);padding:1.5rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;border-top:1px solid rgba(201,168,76,0.2);}
+    .footer-logo{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:900;color:var(--blanc);text-decoration:none;}
+    .footer-logo span{color:var(--rouge-french);}
+    .footer-copy{font-family:'Montserrat',sans-serif;font-size:0.55rem;color:var(--gris);}
+
+    /* ── ANIMATION ── */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+    .entry-card{animation:fadeUp 0.4s ease both;}
+    .entry-card:nth-child(1){animation-delay:0.05s}
+    .entry-card:nth-child(2){animation-delay:0.12s}
+    .entry-card:nth-child(3){animation-delay:0.19s}
+    .entry-card:nth-child(4){animation-delay:0.26s}
+    .entry-card:nth-child(5){animation-delay:0.33s}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:768px){
+      nav{padding:0 1rem;}
+      .nav-links{display:none;}
+      .hamburger{display:flex;}
+      .main-wrap{grid-template-columns:1fr;}
+      .sidebar{border-left:none;border-top:3px solid var(--bleu-pale);padding:2rem 1.2rem;position:static;max-height:none;}
+      .entries-col{padding:2rem 1.2rem;}
+      .filter-bar{top:64px;}
     }
-
-    /* NAV */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 4rem;
-      height: 80px;
-      background: rgba(10, 22, 40, 0.97);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(201,168,76,0.3);
-    }
-
-    .nav-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.5rem;
-      font-weight: 900;
-      color: var(--blanc);
-      text-decoration: none;
-    }
-
-    .nav-logo span { color: var(--rouge-french); }
-
-    .nav-links {
-      display: flex;
-      gap: 2.5rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--bleu-pale);
-      text-decoration: none;
-      transition: color 0.3s;
-      position: relative;
-    }
-
-    .nav-links a::after {
-      content: '';
-      position: absolute;
-      bottom: -4px; left: 0; right: 0;
-      height: 1px;
-      background: var(--rouge-french);
-      transform: scaleX(0);
-      transition: transform 0.3s;
-    }
-
-    .nav-links a:hover { color: var(--blanc); }
-    .nav-links a:hover::after { transform: scaleX(1); }
-    .nav-links a.active { color: var(--or); }
-
-    /* PAGE HEADER */
-    .page-header {
-      background: var(--bleu-nuit);
-      padding: 10rem 8rem 5rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .page-header::after {
-      content: 'TRADUCTIONS';
-      position: absolute;
-      right: -2rem;
-      bottom: -2rem;
-      font-family: 'Playfair Display', serif;
-      font-size: 12rem;
-      font-weight: 900;
-      color: rgba(255,255,255,0.03);
-      white-space: nowrap;
-    }
-
-    .page-header-kicker {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.65rem;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: var(--rouge-french);
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .page-header-kicker::before {
-      content: '';
-      width: 40px;
-      height: 1px;
-      background: var(--rouge-french);
-    }
-
-    .page-header h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.5rem, 5vw, 5rem);
-      font-weight: 900;
-      color: var(--blanc);
-      line-height: 1;
-    }
-
-    .page-header h1 em {
-      font-style: italic;
-      color: var(--bleu-ciel);
-    }
-
-    .page-header-desc {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.2rem;
-      font-style: italic;
-      color: var(--bleu-pale);
-      margin-top: 1.5rem;
-      max-width: 600px;
-    }
-
-    /* MAIN CONTENT */
-    .main-content {
-      display: grid;
-      grid-template-columns: 1fr 300px;
-      gap: 0;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 5rem 2rem;
-    }
-
-    /* FILTER BAR */
-    .filter-bar {
-      background: var(--creme);
-      padding: 2rem 8rem;
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-      border-bottom: 1px solid var(--bleu-pale);
-    }
-
-    .filter-label {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.6rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--gris);
-    }
-
-    .filter-tabs {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .filter-tab {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.6rem;
-      font-weight: 500;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      padding: 0.5rem 1.2rem;
-      border: 1px solid var(--bleu-pale);
-      background: transparent;
-      color: var(--gris);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .filter-tab:hover,
-    .filter-tab.active {
-      background: var(--bleu-marine);
-      border-color: var(--bleu-marine);
-      color: var(--blanc);
-    }
-
-    /* TRANSLATION LOG */
-    .log-container {
-      padding: 5rem 8rem;
-    }
-
-    .log-year-group {
-      margin-bottom: 5rem;
-    }
-
-    .log-year {
-      font-family: 'Playfair Display', serif;
-      font-size: 4rem;
-      font-weight: 900;
-      font-style: italic;
-      color: var(--bleu-pale);
-      margin-bottom: 2rem;
-      border-bottom: 2px solid var(--bleu-pale);
-      padding-bottom: 1rem;
-      display: flex;
-      align-items: baseline;
-      gap: 1rem;
-    }
-
-    .log-year-count {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.7rem;
-      font-weight: 400;
-      letter-spacing: 0.2em;
-      color: var(--gris);
-    }
-
-    .log-entries {
-      display: flex;
-      flex-direction: column;
-      gap: 1px;
-      background: var(--bleu-pale);
-    }
-
-    .log-entry {
-      background: var(--blanc);
-      display: grid;
-      grid-template-columns: 120px 60px 1fr auto;
-      align-items: stretch;
-      text-decoration: none;
-      color: inherit;
-      transition: background 0.2s;
-    }
-
-    .log-entry:hover { background: rgba(200,216,240,0.15); }
-
-    .log-entry-date-col {
-      padding: 1.5rem;
-      border-right: 1px solid var(--bleu-pale);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .log-date-day {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem;
-      font-weight: 900;
-      color: var(--bleu-nuit);
-      line-height: 1;
-    }
-
-    .log-date-month {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.55rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gris);
-    }
-
-    .log-entry-vol {
-      padding: 1.5rem 1rem;
-      border-right: 1px solid var(--bleu-pale);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .log-vol-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 1rem;
-      font-weight: 700;
-      font-style: italic;
-      color: var(--bleu-ciel);
-    }
-
-    .log-entry-info {
-      padding: 1.5rem 2rem;
-    }
-
-    .log-entry-series {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.55rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--bleu-marine);
-      margin-bottom: 0.3rem;
-    }
-
-    .log-entry-chapter {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--bleu-nuit);
-      margin-bottom: 0.3rem;
-    }
-
-    .log-entry-notes {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.9rem;
-      font-style: italic;
-      color: var(--gris);
-    }
-
-    .log-entry-status {
-      padding: 1.5rem;
-      display: flex;
-      align-items: center;
-    }
-
-    .status-badge {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.5rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      padding: 0.3rem 0.8rem;
-    }
-
-    .status-new { background: var(--rouge-french); color: var(--blanc); }
-    .status-done { background: var(--bleu-marine); color: var(--blanc); }
-    .status-wip { background: var(--or); color: var(--bleu-nuit); }
-
-    /* SIDEBAR */
-    .sidebar {
-      background: var(--creme);
-      padding: 3rem 2rem;
-      border-left: 1px solid var(--bleu-pale);
-    }
-
-    .sidebar-widget { margin-bottom: 3rem; }
-
-    .sidebar-title {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.6rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--rouge-french);
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-    }
-
-    .sidebar-title::before {
-      content: '';
-      width: 20px;
-      height: 1px;
-      background: var(--rouge-french);
-    }
-
-    .progress-item {
-      margin-bottom: 1.5rem;
-    }
-
-    .progress-info {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 0.4rem;
-    }
-
-    .progress-series {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--bleu-nuit);
-    }
-
-    .progress-pct {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.65rem;
-      color: var(--bleu-marine);
-    }
-
-    .progress-bar {
-      height: 3px;
-      background: var(--bleu-pale);
-      position: relative;
-    }
-
-    .progress-fill {
-      position: absolute;
-      top: 0; left: 0; bottom: 0;
-      background: linear-gradient(to right, var(--bleu-marine), var(--bleu-ciel));
-      transition: width 1s ease;
-    }
-
-    .tag-cloud {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .tag {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.55rem;
-      letter-spacing: 0.1em;
-      padding: 0.4rem 0.8rem;
-      border: 1px solid var(--bleu-pale);
-      color: var(--bleu-marine);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .tag:hover {
-      background: var(--bleu-marine);
-      border-color: var(--bleu-marine);
-      color: var(--blanc);
-    }
-
-    /* STATS IN SIDEBAR */
-    .sidebar-stat {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.8rem 0;
-      border-bottom: 1px solid var(--bleu-pale);
-    }
-
-    .sidebar-stat-label {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.95rem;
-      color: var(--gris);
-    }
-
-    .sidebar-stat-val {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--bleu-nuit);
-    }
-
-    /* FOOTER */
-    footer {
-      background: var(--bleu-nuit);
-      padding: 2rem 8rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top: 1px solid rgba(201,168,76,0.2);
-    }
-
-    .footer-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.2rem;
-      font-weight: 900;
-      color: var(--blanc);
-      text-decoration: none;
-    }
-
-    .footer-logo span { color: var(--rouge-french); }
-
-    .footer-copy {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.6rem;
-      color: var(--gris);
+    @media(max-width:500px){
+      .page-header{padding:7rem 1.2rem 3rem;}
+      .entry-header{flex-direction:column;gap:0.6rem;}
+      .entry-tag{align-self:flex-start;}
     }
   </style>
 </head>
@@ -486,300 +171,339 @@
       <li><a href="gallery.html">Galerie</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
+    <button class="hamburger" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
   </nav>
+  <div class="mobile-menu" id="mob">
+    <a href="index.html">Accueil</a><div class="mob-line"></div>
+    <a href="translation.html" class="active">Traductions</a><div class="mob-line"></div>
+    <a href="blog.html">Blog</a><div class="mob-line"></div>
+    <a href="gallery.html">Galerie</a><div class="mob-line"></div>
+    <a href="contact.html">Contact</a>
+  </div>
 
   <!-- PAGE HEADER -->
   <div class="page-header">
-    <p class="page-header-kicker">Notre atelier</p>
+    <p class="ph-kicker">Notre atelier</p>
     <h1>Journal des <em>Traductions</em></h1>
-    <p class="page-header-desc">Un registre méticuleux de notre travail — chaque chapitre, chaque volume traduit avec soin depuis 2019.</p>
+    <p class="page-header-desc">Chaque entrée documente un choix de traduction — texte original, version française, et les notes de réflexion du traducteur.</p>
   </div>
 
   <!-- FILTER BAR -->
   <div class="filter-bar">
-    <span class="filter-label">Filtrer par :</span>
+    <span class="filter-label">Filtrer :</span>
     <div class="filter-tabs">
-      <button class="filter-tab active">Tous</button>
+      <button class="filter-tab active">Tout</button>
+      <button class="filter-tab">Traduction</button>
+      <button class="filter-tab">Mini-savoir</button>
       <button class="filter-tab">Shōnen</button>
-      <button class="filter-tab">Shōjo</button>
       <button class="filter-tab">Seinen</button>
       <button class="filter-tab">Josei</button>
-      <button class="filter-tab">Terminés</button>
-      <button class="filter-tab">En cours</button>
     </div>
   </div>
 
-  <!-- LOG + SIDEBAR -->
-  <div style="display: grid; grid-template-columns: 1fr 320px;">
+  <!-- MAIN LAYOUT -->
+  <div class="main-wrap">
 
-    <!-- LOG -->
-    <div class="log-container">
+    <!-- ENTRIES -->
+    <div class="entries-col">
 
-      <!-- 2026 -->
-      <div class="log-year-group">
-        <div class="log-year">
-          2026
-          <span class="log-year-count">12 chapitres</span>
+      <!-- ── 2026 ── -->
+      <div class="year-group">
+        <div class="year-heading">2026 <span class="year-count">12 entrées</span></div>
+        <div class="entries-list">
+
+          <!-- Entrée 1 : traduction avec problème lexical -->
+          <div class="entry-card">
+            <div class="entry-header">
+              <div class="entry-header-left">
+                <div class="entry-series">L'Épée du Destin · Ch. 247</div>
+                <div class="entry-title">「俺はもう限界だ」— Comment rendre l'épuisement total ?</div>
+              </div>
+              <span class="entry-tag tag-trans">翻訳</span>
+            </div>
+            <div class="entry-body">
+              <div class="entry-section">
+                <div class="entry-section-label label-original">📄 Texte original (japonais)</div>
+                <p class="original-text">俺はもう限界だ。これ以上は無理だ。</p>
+              </div>
+              <div class="entry-section">
+                <div class="entry-section-label label-trans">🇫🇷 Traduction</div>
+                <p class="trans-text">Je suis à bout. C'est impossible d'aller plus loin.</p>
+                <div class="trans-arrow">↓　（version révisée）</div>
+                <p class="trans-v2">Je n'en peux plus. Là, c'est vraiment la limite.</p>
+              </div>
+              <div class="entry-section note-section">
+                <div class="entry-section-label label-note">📝 Note du traducteur</div>
+                <p>
+                  「限界」signifie littéralement « limite » — mais « Je suis à ma limite » sonne très littéral en français.<br>
+                  <span class="highlight">「J'en peux plus »</span> capture mieux l'épuisement émotionnel du personnage dans ce contexte de combat.<br>
+                  「これ以上は無理」= « impossible d'aller plus loin » → trop neutre. « C'est vraiment la limite » conserve l'idée de seuil tout en sonnant naturel.
+                </p>
+              </div>
+            </div>
+            <div class="entry-footer">
+              <span class="entry-date">13 mai 2026</span>
+              <span class="entry-chap">Chapitre 247 — La Forêt des Ombres</span>
+            </div>
+          </div>
+
+          <!-- Entrée 2 : mini-savoir -->
+          <div class="entry-card">
+            <div class="entry-header">
+              <div class="entry-header-left">
+                <div class="entry-series">Mini-savoir</div>
+                <div class="entry-title">「先輩」と「後輩」— une hiérarchie intraduisible ?</div>
+              </div>
+              <span class="entry-tag tag-knowledge">ミニ知識</span>
+            </div>
+            <div class="entry-body">
+              <div class="entry-section">
+                <div class="entry-section-label label-original">📄 Termes japonais</div>
+                <p class="original-text">先輩（senpai）／後輩（kōhai）</p>
+              </div>
+              <div class="entry-section">
+                <div class="entry-section-label label-trans">🇫🇷 Options de traduction</div>
+                <p class="trans-text">
+                  A) Laisser « senpai / kōhai » en japonais et ajouter une note de bas de page.<br>
+                  B) « aîné / cadet » — approximatif mais lisible.<br>
+                  C) « supérieur / subordonné » — trop formel, connotation professionnelle non voulue.
+                </p>
+              </div>
+              <div class="entry-section note-section">
+                <div class="entry-section-label label-note">📝 Note du traducteur</div>
+                <p>
+                  Nous avons opté pour <span class="highlight">l'option A</span> dans les mangas de lycée, car « senpai » fait désormais partie du lexique des lecteurs français habitués au genre.<br>
+                  Pour les titres grand public ou les récits historiques, l'option B reste préférable pour ne pas alourdir la lecture.
+                </p>
+              </div>
+            </div>
+            <div class="entry-footer">
+              <span class="entry-date">10 mai 2026</span>
+              <span class="entry-chap">Note générale — culture manga</span>
+            </div>
+          </div>
+
+          <!-- Entrée 3 : traduction longue avec révision -->
+          <div class="entry-card">
+            <div class="entry-header">
+              <div class="entry-header-left">
+                <div class="entry-series">Chroniques de l'Aube · Ch. 89</div>
+                <div class="entry-title">Le monologue intérieur — rythme et ponctuation</div>
+              </div>
+              <span class="entry-tag tag-trans">翻訳</span>
+            </div>
+            <div class="entry-body">
+              <div class="entry-section">
+                <div class="entry-section-label label-original">📄 Texte original (japonais)</div>
+                <p class="original-text">なぜ俺だけが知っている？なぜ誰も気づかない？この世界には何かが隠されている——俺にはわかる。でも、証明できない。</p>
+              </div>
+              <div class="entry-section">
+                <div class="entry-section-label label-trans">🇫🇷 Traduction v1</div>
+                <p class="trans-text">Pourquoi suis-je le seul à savoir ? Pourquoi personne ne remarque ? Ce monde cache quelque chose — je le sens. Mais je ne peux pas le prouver.</p>
+              </div>
+              <div class="entry-section">
+                <div class="entry-section-label label-trans">🇫🇷 Traduction v2 (révisée)</div>
+                <p class="trans-text">Pourquoi moi seul ? Pourquoi personne d'autre ne voit ? Il y a quelque chose de caché dans ce monde — je le sais. Mais impossible à prouver.</p>
+              </div>
+              <div class="entry-section note-section">
+                <div class="entry-section-label label-note">📝 Note du traducteur</div>
+                <p>
+                  Le monologue japonais est très segmenté — des phrases courtes, percutantes. La v1 est fidèle mais un peu longue.<br>
+                  En v2 : <span class="highlight">suppression du sujet répété</span> (« suis-je le seul à savoir » → « moi seul ? ») pour garder le rythme haché.<br>
+                  「でも、証明できない」→ « Mais impossible à prouver » : l'ellipse du sujet renforce l'effet de pensée fragmentée.
+                </p>
+              </div>
+            </div>
+            <div class="entry-footer">
+              <span class="entry-date">11 mai 2026</span>
+              <span class="entry-chap">Chapitre 89 — Le Dernier Témoin</span>
+            </div>
+          </div>
+
+          <!-- Entrée 4 : mini-savoir sur onomatopées -->
+          <div class="entry-card">
+            <div class="entry-header">
+              <div class="entry-header-left">
+                <div class="entry-series">Mini-savoir</div>
+                <div class="entry-title">Les onomatopées manga — « ドキドキ » en français</div>
+              </div>
+              <span class="entry-tag tag-knowledge">ミニ知識</span>
+            </div>
+            <div class="entry-body">
+              <div class="entry-section">
+                <div class="entry-section-label label-original">📄 Termes japonais</div>
+                <p class="original-text">ドキドキ (doki doki) — palpitations du cœur<br>ふわふわ (fuwa fuwa) — sensation légère, flottante<br>キラキラ (kira kira) — qui brille, qui scintille</p>
+              </div>
+              <div class="entry-section">
+                <div class="entry-section-label label-trans">🇫🇷 Équivalents utilisés</div>
+                <p class="trans-text">
+                  ドキドキ → « Boum-boum » / « le cœur qui s'emballe »<br>
+                  ふわふわ → « léger léger » / « comme sur un nuage »<br>
+                  キラキラ → « tout brillant » / parfois laissé en japonais dans les cases
+                </p>
+              </div>
+              <div class="entry-section note-section">
+                <div class="entry-section-label label-note">📝 Note du traducteur</div>
+                <p>
+                  Le français manque de <span class="highlight">giongo / gitaigo</span> (onomatopées d'état) aussi expressifs que le japonais.<br>
+                  Notre approche : conserver le mot japonais dans la bulle quand l'image est suffisamment éloquente, et utiliser une périphrase dans les dialogues.<br>
+                  Le choix est toujours contextuel — l'humour, le registre et l'âge du personnage influencent la solution retenue.
+                </p>
+              </div>
+            </div>
+            <div class="entry-footer">
+              <span class="entry-date">8 mai 2026</span>
+              <span class="entry-chap">Note générale — techniques de lettrure</span>
+            </div>
+          </div>
+
+          <!-- Entrée 5 -->
+          <div class="entry-card">
+            <div class="entry-header">
+              <div class="entry-header-left">
+                <div class="entry-series">Sakura Éternelle · Ch. 15</div>
+                <div class="entry-title">「好き」— aimer, adorer, ou… aimer d'amour ?</div>
+              </div>
+              <span class="entry-tag tag-trans">翻訳</span>
+            </div>
+            <div class="entry-body">
+              <div class="entry-section">
+                <div class="entry-section-label label-original">📄 Texte original (japonais)</div>
+                <p class="original-text">あなたのことが好きです。ずっと前から。</p>
+              </div>
+              <div class="entry-section">
+                <div class="entry-section-label label-trans">🇫🇷 Options de traduction</div>
+                <p class="trans-text">
+                  A) « Je t'aime bien. Depuis longtemps. » — ambigu (trop amical ?)<br>
+                  B) « Je t'aime. Depuis toujours. » — trop fort pour 「好き」?<br>
+                  C) « Tu me plais. Depuis le début. » — registre naturel pour une confession lycéenne.
+                </p>
+              </div>
+              <div class="entry-section note-section">
+                <div class="entry-section-label label-note">📝 Note du traducteur</div>
+                <p>
+                  「好き」est volontairement ambigu en japonais — c'est sa force dans les scènes de confession.<br>
+                  <span class="highlight">Option C retenue</span> : « Tu me plais » conserve la légèreté et le tremblement du moment sans l'alourdir.<br>
+                  « Depuis le début » plutôt que « depuis longtemps » : 「ずっと前から」suggère une durée indéfinie mais profonde — « depuis le début » est plus poétique en français.
+                </p>
+              </div>
+            </div>
+            <div class="entry-footer">
+              <span class="entry-date">9 mai 2026</span>
+              <span class="entry-chap">Chapitre 15 — Adieu, Printemps (final)</span>
+            </div>
+          </div>
+
         </div>
+      </div><!-- /year-group 2026 -->
 
-        <div class="log-entries">
-          <a href="#" class="log-entry">
-            <div class="log-entry-date-col">
-              <span class="log-date-day">13</span>
-              <span class="log-date-month">Mai</span>
-            </div>
-            <div class="log-entry-vol">
-              <span class="log-vol-num">Ch.247</span>
-            </div>
-            <div class="log-entry-info">
-              <div class="log-entry-series">L'Épée du Destin · Shōnen</div>
-              <div class="log-entry-chapter">La Forêt des Ombres — Partie II</div>
-              <div class="log-entry-notes">Traduction de Haruki Sato. Notes de traducteur disponibles.</div>
-            </div>
-            <div class="log-entry-status">
-              <span class="status-badge status-new">Nouveau</span>
-            </div>
-          </a>
+      <!-- ── 2025 ── -->
+      <div class="year-group">
+        <div class="year-heading">2025 <span class="year-count">84 entrées</span></div>
+        <div class="entries-list">
 
-          <a href="#" class="log-entry">
-            <div class="log-entry-date-col">
-              <span class="log-date-day">11</span>
-              <span class="log-date-month">Mai</span>
+          <div class="entry-card">
+            <div class="entry-header">
+              <div class="entry-header-left">
+                <div class="entry-series">Le Gardien du Temps · Vol. 8</div>
+                <div class="entry-title">「やれやれ」— le soupir universel</div>
+              </div>
+              <span class="entry-tag tag-knowledge">ミニ知識</span>
             </div>
-            <div class="log-entry-vol">
-              <span class="log-vol-num">Ch.89</span>
+            <div class="entry-body">
+              <div class="entry-section">
+                <div class="entry-section-label label-original">📄 Texte original</div>
+                <p class="original-text">やれやれ、また面倒なことになった。</p>
+              </div>
+              <div class="entry-section">
+                <div class="entry-section-label label-trans">🇫🇷 Traduction</div>
+                <p class="trans-text">Pfff... encore des ennuis.</p>
+              </div>
+              <div class="entry-section note-section">
+                <div class="entry-section-label label-note">📝 Note du traducteur</div>
+                <p>
+                  「やれやれ」est une interjection de résignation légèrement amusée — très difficile à rendre.<br>
+                  <span class="highlight">« Pfff »</span> capture bien l'expiration et la lassitude sans dramatiser.<br>
+                  Alternatives envisagées : « Décidément… », « Encore… » — trop neutres. « Bon sang » — trop fort.
+                </p>
+              </div>
             </div>
-            <div class="log-entry-info">
-              <div class="log-entry-series">Chroniques de l'Aube · Seinen</div>
-              <div class="log-entry-chapter">Le Dernier Témoin</div>
-              <div class="log-entry-notes">Chapitre clé — révélations importantes sur l'arc principal.</div>
+            <div class="entry-footer">
+              <span class="entry-date">20 déc. 2025</span>
+              <span class="entry-chap">Volume 8 — Chapitres 41–50</span>
             </div>
-            <div class="log-entry-status">
-              <span class="status-badge status-new">Nouveau</span>
-            </div>
-          </a>
+          </div>
 
-          <a href="#" class="log-entry">
-            <div class="log-entry-date-col">
-              <span class="log-date-day">9</span>
-              <span class="log-date-month">Mai</span>
-            </div>
-            <div class="log-entry-vol">
-              <span class="log-vol-num">Ch.15</span>
-            </div>
-            <div class="log-entry-info">
-              <div class="log-entry-series">Sakura Éternelle · Josei</div>
-              <div class="log-entry-chapter">Adieu, Printemps</div>
-              <div class="log-entry-notes">Chapitre final de la série. Un dernier adieu poétique.</div>
-            </div>
-            <div class="log-entry-status">
-              <span class="status-badge status-done">Complet</span>
-            </div>
-          </a>
-
-          <a href="#" class="log-entry">
-            <div class="log-entry-date-col">
-              <span class="log-date-day">5</span>
-              <span class="log-date-month">Mai</span>
-            </div>
-            <div class="log-entry-vol">
-              <span class="log-vol-num">Ch.1</span>
-            </div>
-            <div class="log-entry-info">
-              <div class="log-entry-series">Vent du Nord · Shōnen</div>
-              <div class="log-entry-chapter">Le Début du Voyage</div>
-              <div class="log-entry-notes">Première traduction d'une nouvelle série. Introduction prometteuse.</div>
-            </div>
-            <div class="log-entry-status">
-              <span class="status-badge status-wip">En cours</span>
-            </div>
-          </a>
-
-          <a href="#" class="log-entry">
-            <div class="log-entry-date-col">
-              <span class="log-date-day">2</span>
-              <span class="log-date-month">Mai</span>
-            </div>
-            <div class="log-entry-vol">
-              <span class="log-vol-num">Ch.246</span>
-            </div>
-            <div class="log-entry-info">
-              <div class="log-entry-series">L'Épée du Destin · Shōnen</div>
-              <div class="log-entry-chapter">La Forêt des Ombres — Partie I</div>
-              <div class="log-entry-notes">Début d'un nouvel arc narratif riche en symbolisme.</div>
-            </div>
-            <div class="log-entry-status">
-              <span class="status-badge status-done">Publié</span>
-            </div>
-          </a>
         </div>
-      </div>
+      </div><!-- /year-group 2025 -->
 
-      <!-- 2025 -->
-      <div class="log-year-group">
-        <div class="log-year">
-          2025
-          <span class="log-year-count">84 chapitres</span>
-        </div>
-
-        <div class="log-entries">
-          <a href="#" class="log-entry">
-            <div class="log-entry-date-col">
-              <span class="log-date-day">28</span>
-              <span class="log-date-month">Déc</span>
-            </div>
-            <div class="log-entry-vol">
-              <span class="log-vol-num">Ch.245</span>
-            </div>
-            <div class="log-entry-info">
-              <div class="log-entry-series">L'Épée du Destin · Shōnen</div>
-              <div class="log-entry-chapter">Le Serment du Samouraï</div>
-              <div class="log-entry-notes">Point culminant de l'arc « Clan Koga ».</div>
-            </div>
-            <div class="log-entry-status">
-              <span class="status-badge status-done">Publié</span>
-            </div>
-          </a>
-
-          <a href="#" class="log-entry">
-            <div class="log-entry-date-col">
-              <span class="log-date-day">20</span>
-              <span class="log-date-month">Déc</span>
-            </div>
-            <div class="log-entry-vol">
-              <span class="log-vol-num">Vol.8</span>
-            </div>
-            <div class="log-entry-info">
-              <div class="log-entry-series">Le Gardien du Temps · Seinen</div>
-              <div class="log-entry-chapter">Volume complet — Chapitres 41–50</div>
-              <div class="log-entry-notes">Publication du volume entier. Travail d'équipe exceptionnel.</div>
-            </div>
-            <div class="log-entry-status">
-              <span class="status-badge status-done">Publié</span>
-            </div>
-          </a>
-
-          <a href="#" class="log-entry">
-            <div class="log-entry-date-col">
-              <span class="log-date-day">5</span>
-              <span class="log-date-month">Nov</span>
-            </div>
-            <div class="log-entry-vol">
-              <span class="log-vol-num">Ch.14</span>
-            </div>
-            <div class="log-entry-info">
-              <div class="log-entry-series">Sakura Éternelle · Josei</div>
-              <div class="log-entry-chapter">L'Automne des Promesses</div>
-              <div class="log-entry-notes">Avant-dernier chapitre de la série.</div>
-            </div>
-            <div class="log-entry-status">
-              <span class="status-badge status-done">Publié</span>
-            </div>
-          </a>
-        </div>
-      </div>
-
-    </div>
+    </div><!-- /entries-col -->
 
     <!-- SIDEBAR -->
     <div class="sidebar">
 
-      <div class="sidebar-widget">
-        <h3 class="sidebar-title">Avancement des séries</h3>
-
-        <div class="progress-item">
-          <div class="progress-info">
-            <span class="progress-series">L'Épée du Destin</span>
-            <span class="progress-pct">82%</span>
-          </div>
-          <div class="progress-bar"><div class="progress-fill" style="width:82%"></div></div>
+      <div class="sb-widget">
+        <h3 class="sb-title">Avancement</h3>
+        <div class="prog-item">
+          <div class="prog-info"><span class="prog-series">L'Épée du Destin</span><span class="prog-pct">82%</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:82%"></div></div>
         </div>
-
-        <div class="progress-item">
-          <div class="progress-info">
-            <span class="progress-series">Chroniques de l'Aube</span>
-            <span class="progress-pct">67%</span>
-          </div>
-          <div class="progress-bar"><div class="progress-fill" style="width:67%"></div></div>
+        <div class="prog-item">
+          <div class="prog-info"><span class="prog-series">Chroniques de l'Aube</span><span class="prog-pct">67%</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:67%"></div></div>
         </div>
-
-        <div class="progress-item">
-          <div class="progress-info">
-            <span class="progress-series">Le Gardien du Temps</span>
-            <span class="progress-pct">55%</span>
-          </div>
-          <div class="progress-bar"><div class="progress-fill" style="width:55%"></div></div>
+        <div class="prog-item">
+          <div class="prog-info"><span class="prog-series">Le Gardien du Temps</span><span class="prog-pct">55%</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:55%"></div></div>
         </div>
-
-        <div class="progress-item">
-          <div class="progress-info">
-            <span class="progress-series">Vent du Nord</span>
-            <span class="progress-pct">3%</span>
-          </div>
-          <div class="progress-bar"><div class="progress-fill" style="width:3%"></div></div>
+        <div class="prog-item">
+          <div class="prog-info"><span class="prog-series">Vent du Nord</span><span class="prog-pct">3%</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:3%"></div></div>
         </div>
       </div>
 
-      <div class="sidebar-widget">
-        <h3 class="sidebar-title">Statistiques</h3>
-        <div class="sidebar-stat">
-          <span class="sidebar-stat-label">Total chapitres</span>
-          <span class="sidebar-stat-val">312</span>
-        </div>
-        <div class="sidebar-stat">
-          <span class="sidebar-stat-label">Cette année</span>
-          <span class="sidebar-stat-val">47</span>
-        </div>
-        <div class="sidebar-stat">
-          <span class="sidebar-stat-label">Séries actives</span>
-          <span class="sidebar-stat-val">8</span>
-        </div>
-        <div class="sidebar-stat">
-          <span class="sidebar-stat-label">Séries terminées</span>
-          <span class="sidebar-stat-val">12</span>
-        </div>
-        <div class="sidebar-stat">
-          <span class="sidebar-stat-label">Traducteurs</span>
-          <span class="sidebar-stat-val">5</span>
-        </div>
+      <div class="sb-widget">
+        <h3 class="sb-title">Statistiques</h3>
+        <div class="sb-stat"><span class="sb-stat-lbl">Total entrées</span><span class="sb-stat-val">96</span></div>
+        <div class="sb-stat"><span class="sb-stat-lbl">Cette année</span><span class="sb-stat-val">12</span></div>
+        <div class="sb-stat"><span class="sb-stat-lbl">Séries actives</span><span class="sb-stat-val">8</span></div>
+        <div class="sb-stat"><span class="sb-stat-lbl">Traducteurs</span><span class="sb-stat-val">5</span></div>
       </div>
 
-      <div class="sidebar-widget">
-        <h3 class="sidebar-title">Genres</h3>
+      <div class="sb-widget">
+        <h3 class="sb-title">Sujets</h3>
         <div class="tag-cloud">
-          <span class="tag">Shōnen</span>
-          <span class="tag">Shōjo</span>
-          <span class="tag">Seinen</span>
-          <span class="tag">Josei</span>
-          <span class="tag">Action</span>
-          <span class="tag">Romance</span>
-          <span class="tag">Fantastique</span>
-          <span class="tag">Mystère</span>
-          <span class="tag">Comédie</span>
-          <span class="tag">Drame</span>
-          <span class="tag">Sport</span>
-          <span class="tag">Horreur</span>
+          <span class="tag-pill">Onomatopées</span>
+          <span class="tag-pill">Honorifiques</span>
+          <span class="tag-pill">Registre</span>
+          <span class="tag-pill">Rythme</span>
+          <span class="tag-pill">Monologue</span>
+          <span class="tag-pill">Noms propres</span>
+          <span class="tag-pill">Humour</span>
+          <span class="tag-pill">Dialecal</span>
         </div>
       </div>
 
-    </div>
-  </div>
+      <div class="submit-banner">
+        <h4>Une question de traduction ?</h4>
+        <p>Signalez une erreur ou proposez une meilleure version. Nous adorons les discussions !</p>
+        <a href="contact.html">Écrire à l'équipe →</a>
+      </div>
 
-  <!-- FOOTER -->
+    </div><!-- /sidebar -->
+
+  </div><!-- /main-wrap -->
+
   <footer>
     <a href="index.html" class="footer-logo">Maison du <span>Manga</span></a>
-    <span class="footer-copy">© 2026 Maison du Manga · Tous droits réservés</span>
+    <span class="footer-copy">© 2026 Maison du Manga · Toutes les traductions sont des œuvres originales</span>
   </footer>
 
   <script>
-    // Filter tabs
-    document.querySelectorAll('.filter-tab').forEach(tab => {
-      tab.addEventListener('click', function() {
-        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-        this.classList.add('active');
-      });
-    });
+    const ham=document.getElementById('ham'),mob=document.getElementById('mob');
+    ham.addEventListener('click',()=>{ham.classList.toggle('open');mob.classList.toggle('open');document.body.style.overflow=mob.classList.contains('open')?'hidden':'';});
+    mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{ham.classList.remove('open');mob.classList.remove('open');document.body.style.overflow='';}));
+    document.querySelectorAll('.filter-tab').forEach(t=>t.addEventListener('click',function(){document.querySelectorAll('.filter-tab').forEach(x=>x.classList.remove('active'));this.classList.add('active');}));
   </script>
-
 </body>
 </html>
